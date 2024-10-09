@@ -19,5 +19,12 @@ urlpatterns = [
     path("providers/add/", views.ProviderCreate.as_view(), name='provider-add'),
     path("providers/<pk>/update/", views.ProviderUpdate.as_view(), name='provider-update'),
     path("providers/<pk>/delete/", views.ProviderDelete.as_view(), name='provider-delete'),
+
+    # Stock
+    path("stocks", views.Stocks.as_view(), name='stocks'),
+    path("stocks/<pk>", views.StockDetail.as_view(), name='stock'),
+    path("stocks/add/", views.StockCreate.as_view(), name='stock-add'),
+    path("stocks/<pk>/update/", views.StockUpdate.as_view(), name='stock-update'),
+    path("stocks/<pk>/delete/", views.StockDelete.as_view(), name='stock-delete'),
 ]
 

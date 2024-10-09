@@ -31,13 +31,12 @@ class Product(models.Model):
     name          = models.CharField(max_length=100)
     price_ht      = models.DecimalField(max_digits=8, decimal_places=2,  null=True, blank=True, verbose_name="Prix unitaire HT")
     status        = models.SmallIntegerField(choices=PRODUCT_STATUS, default=0)
-    date_creation =  models.DateTimeField(blank=True, verbose_name="Date création", default=timezone.now()) 
+    date_creation = models.DateTimeField(blank=True, verbose_name="Date création", default=timezone.now()) 
 
     def __str__(self):
         return "{0}".format(self.name)
-    
-class Provider(models.Model):
 
+class Provider(models.Model):
     class Meta:
         verbose_name = "Provider"
         verbose_name_plural = "Providers"
@@ -46,23 +45,18 @@ class Provider(models.Model):
     address = models.CharField(max_length=100)
     phone = models.CharField(max_length=100)
     email = models.EmailField(max_length=100)
-    products = models.ManyToManyField(Product, through='ProductProvider')
 
     def __str__(self):
         return "{0}".format(self.name)
     
-class ProductProvider(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
-    rate = models.DecimalField(max_digits=8, decimal_places=2,  null=True, blank=True, verbose_name="Taux")
-
-    def __str__(self):
-        return "{0} {1}".format(self.product, self.provider)
-    
 class Stock(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    rate = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, verbose_name="Marge")
+    quantity = models.IntegerField(default=0, verbose_name="Quantité")
+
+    class Meta:
+        unique_together = ('product', 'provider')
 
     def __str__(self):
         return "{0} {1}".format(self.product, self.provider)

@@ -1,41 +1,53 @@
-<!doctype html>
+<!DOCTYPE html>
 {% load static %}
 <html lang="fr">
-
-<head>
-    <meta charset="utf -8">
+  <head>
+    <meta charset="utf -8" />
     <title>{% block title %}{% endblock %}</title>
     {% block styles %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-    <link rel="stylesheet" href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}">
+    <link
+      rel="stylesheet"
+      href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}"
+    />
     {% endblock %}
-</head>
-<body class="d-flex flex-column min-vh-100">
+  </head>
+  <body class="d-flex flex-column min-vh-100">
     <nav class="bg-dark">
-        <ul class="nav text-white container">
-            <li class="nav-item bg-primary">
-                <a class="text-white btn btn-dark rounded-0 px-5" href="{% url 'products' %}">
-                    Produits
-                </a>
-            </li>
-            <li class="nav-item bg-primary">
-                <a class="text-white btn btn-dark rounded-0 px-5" href="{% url 'providers' %}">
-                    Fournisseurs
-                </a>
-            </li>
-        </ul>
+      <ul class="nav text-white container">
+        <li class="nav-item bg-primary">
+          <a
+            class="text-white btn btn-dark rounded-0 px-5"
+            href="{% url 'products' %}"
+          >
+            Produits
+          </a>
+        </li>
+        <li class="nav-item bg-primary">
+          <a
+            class="text-white btn btn-dark rounded-0 px-5"
+            href="{% url 'providers' %}"
+          >
+            Fournisseurs
+          </a>
+        </li>
+        <li class="nav-item bg-primary">
+          <a
+            class="text-white btn btn-dark rounded-0 px-5"
+            href="{% url 'stocks' %}"
+          >
+            Stocks
+          </a>
+        </li>
+      </ul>
     </nav>
     <main role="main" class="bg-primary flex-grow-1 py-4">
-        <div class="text-white">
-            {% block content %}
-            {% endblock %}
-        </div>
+      <div class="text-white">{% block content %} {% endblock %}</div>
     </main>
     <footer class="footer bg-dark text-white">
-        <div class="container">
-            <p>&copy; Copyright {% now "M Y" %} by LAVENANT, COURSIMAULT (c)</p>
-        </div>
+      <div class="container">
+        <p>&copy; Copyright {% now "M Y" %} by LAVENANT, COURSIMAULT (c)</p>
+      </div>
     </footer>
-</body>
-
+  </body>
 </html>

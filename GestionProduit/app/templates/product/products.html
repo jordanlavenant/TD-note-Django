@@ -1,31 +1,44 @@
 {% extends 'base.html' %}
-
-{% block title %}
-{{ title }}
-{% endblock %}
+<!-- prettier-ignore -->
+{% block title %} {{ title }} {% endblock %} 
 {% block content %}
 <div class="container">
-    <div class="d-flex justify-content-between align-items-center my-3">
-        <h1>{{ title }}</h1>
-        <a href="{% url 'product-add' %}" class="btn btn-success">Ajouter un produit</a>
-    </div>
-    <table class="table table-striped table-bordered">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">Nom</th>
-                <th scope="col">Prix HT</th>
-                <th scope="col">Date de création</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for product in products %}
-            <tr onclick="window.location.href=`{% url 'product' product.id %}`" style="cursor: pointer;">
-                <td>{{ product.name }}</td>
-                <td>{{ product.price_ht }}</td>
-                <td>{{ product.date_creation }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+  <div class="d-flex justify-content-between align-items-center my-3">
+    <h1>{{ title }}</h1>
+    <a href="{% url 'product-add' %}" class="btn btn-success"
+      >Ajouter un produit</a
+    >
+  </div>
+  <table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Nom</th>
+        <th scope="col">Prix HT</th>
+        <th scope="col">Prix TTC</th>
+        <th scope="col">Stock</th>
+        <th scope="col">Fournisseurs</th>
+        <th scope="col">Date de création</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+      <tr
+        onclick="window.location.href=`{% url 'product' product.id %}`"
+        style="cursor: pointer"
+      >
+        <td>{{ product.name }}</td>
+        <td>{{ product.price_ht }}</td>
+        <td>{{ product.price_ttc }}</td>
+        <td>{{ product.stock }}</td>
+        <td>
+          {% for provider in product.providers %}
+          <p>{{ provider }}</p>
+          {% endfor %}
+        </td>
+        <td>{{ product.date_creation }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 {% endblock %}

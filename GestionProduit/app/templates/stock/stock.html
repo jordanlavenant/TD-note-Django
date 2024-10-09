@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+<!-- prettier-ignore -->
+{% block title %} {{ title }} {% endblock %} 
+{% block content %}
+<div class="container">
+  <a href="{% url 'stocks' %}" class="btn btn-secondary mb-3">Retour</a>
+  <a href="{% url 'stock-update' stock.id %}" class="btn btn-warning mb-3"
+    >Modifier</a
+  >
+  <a href="{% url 'stock-delete' stock.id %}" class="btn btn-danger mb-3"
+    >Supprimer</a
+  >
+  <h2 class="display-5">Stock {{ stock.id }}</h2>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <strong>Produit :</strong> {{ stock.product }}
+    </li>
+    <li class="list-group-item">
+      <strong>Fournisseur :</strong> {{ stock.provider }}
+    </li>
+    <li class="list-group-item"><strong>Marge :</strong> {{ stock.rate }}</li>
+    <li class="list-group-item">
+      <strong>Quantité :</strong> {{ stock.quantity }}
+    </li>
+  </ul>
+</div>
+{% endblock %}

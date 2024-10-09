@@ -1,9 +1,9 @@
 {% extends 'base.html' %} {% block content %}
 <div class="container">
-  <a href="{% url 'products' %}" class="btn btn-secondary mb-3"
-    >Retour à la liste des produits</a
+  <a href="{% url 'stocks' %}" class="btn btn-secondary mb-3"
+    >Retour à la liste des stocks</a
   >
-  <h1>Création d'un nouveau produit</h1>
+  <h1>Création d'un nouveau stock</h1>
   <form action="" method="post" novalidate>
     {% csrf_token %} {{ form.as_p }}
     <button type="submit" class="btn btn-success mt-2">Créer</button>

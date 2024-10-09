@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+<!-- prettier-ignore -->
+{% block content %}
+<div class="container mt-4">
+  <h1>Suppression d'un fournisseur</h1>
+  <form action="" method="post">
+    {% csrf_token %}
+    <p>
+      Etes-vous sûr de vouloir supprimer le fournisseur :
+      <strong>{{ object.name }}</strong> ?
+    </p>
+    <a href="{% url 'provider' provider.id %}" class="btn btn-secondary"
+      >Retour au fournisseur</a
+    >
+    <button type="submit" class="btn btn-danger">Confirmer</button>
+  </form>
+</div>
+{% endblock %}
