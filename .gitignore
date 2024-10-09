@@ -1,4 +1,6 @@
 */**.sqlite3
 */**/__pycache__
 /venv
+GestionProduit/__pycache__/
+GestionProduits/db.sqlite3
 */**/migrations

@@ -1,0 +1,40 @@
+<!doctype html>
+{% load static %}
+<html lang="fr">
+
+<head>
+    <meta charset="utf -8">
+    <title>{% block title %}{% endblock %}</title>
+    {% block styles %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+    {% comment %} <link rel="stylesheet" href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}"> {% endcomment %}
+    {% endblock %}
+</head>
+
+<style>
+    .navbar{
+        color: white;
+    }
+    li{
+        list-style-type: none;
+        margin-right: 10px;
+    }
+</style>
+<body>
+    {% block nav %}
+  
+    {% endblock %}
+    <main role="main" class="container top-pushed">
+        <div class="mt-4 p-5 bg-primary text-white rounded">
+            {% block contenu %}
+            {% endblock %}
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; Copyright {% now "M Y" %} by Titof Production Copyrigh (c)</p>
+        </div>
+    </footer>
+</body>
+
+</html>
