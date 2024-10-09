@@ -6,33 +6,34 @@
     <meta charset="utf -8">
     <title>{% block title %}{% endblock %}</title>
     {% block styles %}
-    <link rel="stylesheet" href="{% static 'styles.css' %}" />
-    {% comment %} <link rel="stylesheet" href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}"> {% endcomment %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <link rel="stylesheet" href="{% static 'node_modules/bootstrap/dist/css/bootstrap.min.css' %}">
     {% endblock %}
 </head>
-
-<style>
-    .navbar{
-        color: white;
-    }
-    li{
-        list-style-type: none;
-        margin-right: 10px;
-    }
-</style>
-<body>
-    {% block nav %}
-  
-    {% endblock %}
-    <main role="main" class="container top-pushed">
-        <div class="mt-4 p-5 bg-primary text-white rounded">
-            {% block contenu %}
+<body class="d-flex flex-column min-vh-100">
+    <nav class="bg-dark">
+        <ul class="nav text-white container">
+            <li class="nav-item bg-primary">
+                <a class="text-white btn btn-dark rounded-0 px-5" href="{% url 'products' %}">
+                    Produits
+                </a>
+            </li>
+            <li class="nav-item bg-primary">
+                <a class="text-white btn btn-dark rounded-0 px-5" href="{% url 'providers' %}">
+                    Fournisseurs
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <main role="main" class="bg-primary flex-grow-1 py-4">
+        <div class="text-white">
+            {% block content %}
             {% endblock %}
         </div>
     </main>
-    <footer class="footer">
+    <footer class="footer bg-dark text-white">
         <div class="container">
-            <p>&copy; Copyright {% now "M Y" %} by Titof Production Copyrigh (c)</p>
+            <p>&copy; Copyright {% now "M Y" %} by LAVENANT, COURSIMAULT (c)</p>
         </div>
     </footer>
 </body>

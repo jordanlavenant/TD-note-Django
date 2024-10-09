@@ -4,3 +4,4 @@
 GestionProduit/__pycache__/
 GestionProduits/db.sqlite3
 */**/migrations
+*/**/node_modules
