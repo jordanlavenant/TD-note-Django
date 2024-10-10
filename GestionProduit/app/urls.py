@@ -26,5 +26,12 @@ urlpatterns = [
     path("stocks/add/", views.StockCreate.as_view(), name='stock-add'),
     path("stocks/<pk>/update/", views.StockUpdate.as_view(), name='stock-update'),
     path("stocks/<pk>/delete/", views.StockDelete.as_view(), name='stock-delete'),
+
+    # Command
+    path("commands", views.Commands.as_view(), name='commands'),
+    path("commands/<pk>", views.CommandDetail.as_view(), name='command'),
+    path("commands/add/", views.CommandCreate.as_view(), name='command-add'),
+    path("commands/<pk>/update/", views.CommandUpdate.as_view(), name='command-update'),
+    path("commands/<pk>/delete/", views.CommandDelete.as_view(), name='command-delete'),
 ]
 

@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from .models import Product, ProductItem, Provider, Stock
+from .models import Product, Provider, Stock, Command
 from django.views.generic import *
 from django.http import HttpResponse
-from .forms import ProductForm, ProviderForm, StockForm
+from .forms import ProductForm, ProviderForm, StockForm, CommandForm
 from django.shortcuts import redirect
 from django.forms.models import BaseModelForm
 from django.urls import reverse_lazy
@@ -192,3 +192,56 @@ class StockDelete(DeleteView):
     model = Stock
     template_name = 'stock/delete.html'
     success_url = reverse_lazy('stocks')
+
+# Command
+class Commands(ListView):
+    model = Command
+    template_name = 'command/commands.html'
+    context_object_name = 'commands'
+    
+    def get_queryset(self):
+        return Command.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Liste des commandes"
+        context['commands'] = Command.objects.all()
+        return context
+    
+class CommandDetail(DetailView):
+    model = Command
+    template_name = 'command/command.html'
+    context_object_name = 'command'
+
+    def get_context_data(self, **kwargs):
+        context = super(CommandDetail, self).get_context_data(**kwargs)
+        context['title'] = "Détail de la commande"
+        return context
+    
+class CommandCreate(CreateView):
+    model = Command
+    form_class = CommandForm
+    template_name = 'command/add.html'
+
+    def form_valid(self, form: BaseModelForm):
+        command = form.save()
+        return redirect('command', command.id)
+    
+class CommandUpdate(UpdateView):
+    model = Command
+    form_class = CommandForm
+    template_name = 'command/update.html'
+
+    def form_valid(self, form: BaseModelForm):
+        command = form.save()
+        return redirect('command', command.id)
+    
+    def get_context_data(self, **kwargs):
+        context = super(CommandUpdate, self).get_context_data(**kwargs)
+        context['title'] = "Modification de la commande"
+        return context
+    
+class CommandDelete(DeleteView):
+    model = Command
+    template_name = 'command/delete.html'
+    success_url = reverse_lazy('commands')

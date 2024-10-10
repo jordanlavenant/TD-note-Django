@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+<!-- prettier-ignore -->
+{% block title %} {{ title }} {% endblock %} 
+{% block content %}
+<div class="container">
+  <a href="{% url 'command' command.id %}" class="btn btn-secondary mb-3"
+    >Retour</a
+  >
+  <h1 class="my-3">{{ title }}</h1>
+  <form action="" method="post">
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit" class="btn btn-warning mt-2">Modifier</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, Provider, Stock
+from .models import Product, Provider, Stock, Command
 
 class ProductForm(forms.ModelForm):
     class Meta:
@@ -16,3 +16,9 @@ class StockForm(forms.ModelForm):
     class Meta:
         model = Stock
         fields = '__all__'
+
+class CommandForm(forms.ModelForm):
+    class Meta:
+        model = Command
+        fields = '__all__'
+        exclude = ('status', 'date')

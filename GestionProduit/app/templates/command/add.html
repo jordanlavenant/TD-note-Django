@@ -1,0 +1,12 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container">
+  <a href="{% url 'providers' %}" class="btn btn-secondary mb-3"
+    >Retour aux commandes</a
+  >
+  <h1>Nouvelle commande</h1>
+  <form action="" method="post" novalidate>
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit" class="btn btn-success mt-2">Créer</button>
+  </form>
+</div>
+{% endblock %}

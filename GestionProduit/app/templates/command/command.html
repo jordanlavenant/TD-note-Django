@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+{% block content %}
+<div class="container">
+    <a href="{% url 'commands' %}" class="btn btn-secondary mb-3">Retour</a>
+    <a href="{% url 'command-update' command.id %}" class="btn btn-warning mb-3">Modifier</a>
+    <a href="{% url 'command-delete' command.id %}" class="btn btn-danger mb-3">Supprimer</a>
+    <h2 class="display-5">Commande {{ command.id }}</h2>
+    <ul class="list-group">
+        <li class="list-group-item"><strong>Produit :</strong> {{ command.product }}</li>
+        <li class="list-group-item"><strong>Fournisseur :</strong> {{ command.provider }}</li>
+        <li class="list-group-item"><strong>Quantité :</strong> {{ command.quantity }}</li>
+        <li class="list-group-item"><strong>Date :</strong> {{ command.date }}</li>
+        <li class="list-group-item"><strong>Statut :</strong> {{ command.status }}</li>
+    </ul>
+</div>
+{% endblock %}

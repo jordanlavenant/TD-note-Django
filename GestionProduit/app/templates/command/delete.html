@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+<!-- prettier-ignore -->
+{% block content %}
+<div class="container mt-4">
+  <h1>Annulation d'une commande</h1>
+  <form action="" method="post">
+    {% csrf_token %}
+    <p>
+      Etes-vous sûr de vouloir supprimer la commande
+      <strong>{{ object.id }}</strong> ?
+    </p>
+    <a href="{% url 'command' command.id %}" class="btn btn-secondary"
+      >Retour aux commandes</a
+    >
+    <button type="submit" class="btn btn-danger">Confirmer</button>
+  </form>
+</div>
+{% endblock %}

@@ -10,9 +10,10 @@ PRODUCT_STATUS = (
 )
 
 COMMAND_STATUS = (
-    (0, 'Pending'),
-    (1, 'Delivered'),
-    (2, 'Canceled')              
+    (0, 'En attente'),
+    (1, "En cours d'expédition"),
+    (1, 'Expédiée'),
+    (2, 'Annulée')              
 )
 
 class Status(models.Model):
@@ -89,11 +90,11 @@ class Stock(models.Model):
             product_item.save()
 
 class Command(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Produit")
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, verbose_name="Fournisseur")
+    quantity = models.IntegerField(verbose_name="Quantité")
     date = models.DateTimeField(blank=True, verbose_name="Date de commande", default=timezone.now())
-    status = models.SmallIntegerField(choices=COMMAND_STATUS, default=0)
+    status = models.SmallIntegerField(choices=COMMAND_STATUS, default=0, verbose_name="Statut")
 
     def __str__(self):
         return "{0} {1}".format(self.product, self.provider)
