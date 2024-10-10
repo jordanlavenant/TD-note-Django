@@ -4,16 +4,16 @@ import django.utils.timezone as timezone
 # Create your models here.
 
 PRODUCT_STATUS = (
-    (0, 'Offline'),
-    (1, 'Online'),
-    (2, 'Out of stock')              
+    (0, 'Hors ligne'),
+    (1, 'En ligne'),
+    (2, 'En rupture de stock')              
 )
 
 COMMAND_STATUS = (
     (0, 'En attente'),
     (1, "En cours d'expédition"),
-    (1, 'Expédiée'),
-    (2, 'Annulée')              
+    (2, 'Expédiée'),
+    (3, 'Annulée')              
 )
 
 class Status(models.Model):
@@ -51,8 +51,8 @@ class Provider(models.Model):
         return "{0}".format(self.name)
 
 class ProductItem(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_items', verbose_name="Produit")
-    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, related_name='product_items', verbose_name="Fournisseur")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_items')
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, related_name='product_items')
     quantity = models.IntegerField(default=0, verbose_name="Quantité")
     rate = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, verbose_name="Marge")
 
@@ -101,3 +101,22 @@ class Command(models.Model):
     
     def get_status(self):
         return COMMAND_STATUS[self.status][1]
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.status == 2:  # Expédiée
+            stock, created = Stock.objects.get_or_create(
+                product=self.product,
+                provider=self.provider,
+                defaults={'quantity': 0, 'rate': 0}
+            )
+            stock.quantity += self.quantity
+            stock.save()
+
+            product_item, created = ProductItem.objects.get_or_create(
+                product=self.product,
+                provider=self.provider,
+                defaults={'quantity': 0, 'rate': 0}
+            )
+            # product_item.quantity += self.quantity
+            product_item.save()
