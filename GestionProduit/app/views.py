@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Product, Provider, Stock
+from .models import Product, ProductItem, Provider, Stock
 from django.views.generic import *
 from django.http import HttpResponse
 from .forms import ProductForm, ProviderForm, StockForm
@@ -34,7 +34,7 @@ class Products(ListView):
 
             providers = Stock.objects.filter(product=product)
             if providers:
-                product.providers = [provider.provider for provider in providers]
+                product.providers = len(providers)
                 product.stock = sum([provider.quantity for provider in providers])
         
         context['products'] = products
@@ -45,14 +45,16 @@ class ProductDetail(DetailView):
     template_name = 'product/product.html'
     context_object_name = 'product'
 
+    def get_object(self):
+        return Product.objects.get(pk=self.kwargs['pk'])
+
     def get_context_data(self, **kwargs):
         context = super(ProductDetail, self).get_context_data(**kwargs)
         context['title'] = "Détail du produit"
-        stock = Stock.objects.filter(product=self.object).first()
-        if stock:
-            context['price_ttc'] = self.object.price_ht * (1 + stock.rate / 100)
-        else:
-            context['price_ttc'] = self.object.price_ht
+        items = self.get_object().product_items.all()
+        for item in items:
+            item.price_ttc = item.get_price_ttc()
+        context['items'] = items
         return context
 
 class ProductCreate(CreateView):

@@ -14,7 +14,6 @@
       <tr>
         <th scope="col">Nom</th>
         <th scope="col">Prix HT</th>
-        <th scope="col">Prix TTC</th>
         <th scope="col">Stock</th>
         <th scope="col">Fournisseurs</th>
         <th scope="col">Date de création</th>
@@ -28,13 +27,8 @@
       >
         <td>{{ product.name }}</td>
         <td>{{ product.price_ht }}</td>
-        <td>{{ product.price_ttc }}</td>
         <td>{{ product.stock }}</td>
-        <td>
-          {% for provider in product.providers %}
-          <p>{{ provider }}</p>
-          {% endfor %}
-        </td>
+        <td>{{ product.providers }}</td>
         <td>{{ product.date_creation }}</td>
       </tr>
       {% endfor %}

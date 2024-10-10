@@ -15,11 +15,30 @@
     <li class="list-group-item">
       <strong>Prix HT :</strong> {{ product.price_ht }}
     </li>
-    <li class="list-group-item"><strong>Prix TTC :</strong> {{ price_ttc }}</li>
-    <li class="list-group-item"><strong>Stock :</strong> {{ quantity }}</li>
     <li class="list-group-item">
       <strong>Date de création :</strong> {{ product.date_creation }}
     </li>
   </ul>
+  <h3 class="my-4">Produits associés</h3>
+  {% if items %}
+    <div class="row">
+      {% for item in items %}
+        <div class="col-md-4 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ item.provider.name }}</h5>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Quantité :</strong> {{ item.quantity }}</li>
+                <li class="list-group-item"><strong>Marge :</strong> {{ item.rate }} %</li>
+                <li class="list-group-item"><strong>Prix TTC :</strong> {{ item.price_ttc }}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">Il n'y a pas encore de stock de ce produit.</p>
+  {% endif %}
 </div>
 {% endblock %}
