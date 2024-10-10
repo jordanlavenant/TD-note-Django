@@ -98,3 +98,6 @@ class Command(models.Model):
 
     def __str__(self):
         return "{0} {1}".format(self.product, self.provider)
+    
+    def get_status(self):
+        return COMMAND_STATUS[self.status][1]

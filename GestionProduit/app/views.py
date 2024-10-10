@@ -205,7 +205,10 @@ class Commands(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = "Liste des commandes"
-        context['commands'] = Command.objects.all()
+        commands = self.get_queryset()
+        for command in commands:
+            command.status = command.get_status()
+        context['commands'] = commands
         return context
     
 class CommandDetail(DetailView):
@@ -216,6 +219,7 @@ class CommandDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(CommandDetail, self).get_context_data(**kwargs)
         context['title'] = "Détail de la commande"
+        context['status'] = self.get_object().get_status()
         return context
     
 class CommandCreate(CreateView):
