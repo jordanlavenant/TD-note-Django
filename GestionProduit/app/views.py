@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Product, Provider, Stock, Command
+from .models import Product, ProductItem, Provider, Stock, Command
 from django.views.generic import *
 from django.http import HttpResponse
 from .forms import ProductForm, ProviderForm, StockForm, CommandForm
@@ -249,3 +249,42 @@ class CommandDelete(DeleteView):
     model = Command
     template_name = 'command/delete.html'
     success_url = reverse_lazy('commands')
+
+
+from rest_framework import permissions, viewsets
+from .serializers import ProductSerializer, ProviderSerializer, StockSerializer, CommandSerializer, ProductItemSerializer
+
+class ProductViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows products to be viewed or edited.
+    """
+    queryset = Product.objects.all().order_by('name')
+    serializer_class = ProductSerializer
+
+class ProviderViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows providers to be viewed or edited.
+    """
+    queryset = Provider.objects.all().order_by('name')
+    serializer_class = ProviderSerializer
+
+class StockViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows stocks to be viewed or edited.
+    """
+    queryset = Stock.objects.all().order_by('product')
+    serializer_class = StockSerializer
+
+class CommandViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows commands to be viewed or edited.
+    """
+    queryset = Command.objects.all().order_by('date')
+    serializer_class = CommandSerializer
+
+class ProductItemViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows product items to be viewed or edited.
+    """
+    queryset = ProductItem.objects.all().order_by('product')
+    serializer_class = ProductItemSerializer

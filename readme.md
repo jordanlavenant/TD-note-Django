@@ -18,24 +18,22 @@ deactivate
 
 ## Installation 
 
+Installation des dépendances
 ```
 pip install -r requirements.txt
 ```
 
-## Migration
+Installation de bootstrap
+```
+cd GestionProduit/app/static/
+npm install
+```
 
+## Migration
+Depuis la racine du projet, effectuez :
 ```
 cd GestionProduit
 python3 manage.py migrate
 ```
 
 ## Features
-
-
-http://127.0.0.1/app/products
-http://127.0.0.1/app/providers
-
-Fournisseur défini une marge (taux)
-la production (de produits) initialise un prix de base
-Le prix affiché est le prix de base * la marge
-
