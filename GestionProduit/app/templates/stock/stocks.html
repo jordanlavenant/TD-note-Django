@@ -7,6 +7,16 @@
     <h1>{{ title }}</h1>
     <a href="{% url 'stock-add' %}" class="btn btn-success">Ajouter du stock</a>
   </div>
+  <form method="GET" action="" class="d-flex justify-content-between align-items-center my-3 gap-2">
+    <input class="form-control" type="text" name="search" placeholder="Tapez ici votre recherche"
+    value="{{ request.GET.search }}">
+    <button type="submit" class="btn btn-success">Rechercher</button>
+  </form>
+  {% if results > 1 %}
+  <p class="text-end"><strong>{{ results }}</strong> résultats</p>
+  {% else %}
+  <p class="text-end"><strong>{{ results }}</strong> résultat</p>
+  {% endif %}
   <table class="table table-striped table-bordered">
     <thead class="thead-dark">
       <tr>

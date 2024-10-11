@@ -6,7 +6,7 @@ from .forms import ProductForm, ProviderForm, StockForm, CommandForm
 from django.shortcuts import redirect
 from django.forms.models import BaseModelForm
 from django.urls import reverse_lazy
-
+from django.db.models import Q
 # Create your views here.
 
 # def index(request):
@@ -19,12 +19,15 @@ class Products(ListView):
     context_object_name = 'products'
     
     def get_queryset(self):
-        return Product.objects.all()
+        if (self.request.GET.get('search')):
+            return Product.objects.filter(name__icontains=self.request.GET.get('search'))
+        else: return Product.objects.all()
 
     def get_context_data(self, **kwargs):
+        products = self.get_queryset()
         context = super().get_context_data(**kwargs)
         context['title'] = "Liste des produits"
-        products = self.get_queryset()
+        context['results'] = len(products)
         for product in products:
             stock = Stock.objects.filter(product=product).first()
             if stock:
@@ -93,12 +96,16 @@ class Providers(ListView):
     context_object_name = 'providers'
     
     def get_queryset(self):
-        return Provider.objects.all()
+        if (self.request.GET.get('search')):
+            return Provider.objects.filter(name__icontains=self.request.GET.get('search'))
+        else: return Provider.objects.all()
 
     def get_context_data(self, **kwargs):
+        providers = self.get_queryset()
         context = super().get_context_data(**kwargs)
         context['title'] = "Liste des fournisseurs"
-        context['providers'] = Provider.objects.all()
+        context['results'] = len(providers)
+        context['providers'] = providers
         return context
 
 class ProviderDetail(DetailView):
@@ -109,6 +116,10 @@ class ProviderDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = "Détail du fournisseur"
+        stocks = self.get_object().get_stocks()
+        for stock in stocks:
+            stock.price_ttc = stock.product.price_ht * (1 + stock.rate / 100)
+        context['stocks'] = stocks
         return context
 
 class ProviderCreate(CreateView):
@@ -147,12 +158,20 @@ class Stocks(ListView):
     context_object_name = 'stocks'
     
     def get_queryset(self):
-        return Stock.objects.all()
+        search_query = self.request.GET.get('search')
+        if search_query:
+            return Stock.objects.filter(
+                Q(product__name__icontains=search_query) | 
+                Q(provider__name__icontains=search_query)
+            )
+        else: return Stock.objects.all()
 
     def get_context_data(self, **kwargs):
+        stocks = self.get_queryset()
         context = super().get_context_data(**kwargs)
         context['title'] = "Liste des stocks"
-        context['stocks'] = Stock.objects.all()
+        context["results"] = len(stocks)
+        context['stocks'] = stocks
         return context
     
 class StockDetail(DetailView):
@@ -200,15 +219,41 @@ class Commands(ListView):
     context_object_name = 'commands'
     
     def get_queryset(self):
-        return Command.objects.all()
+        # search_query = self.request.GET.get('search')
+        # if search_query:
+        #     return Stock.objects.filter(
+        #         Q(product__name__icontains=search_query) | 
+        #         Q(provider__name__icontains=search_query)
+        #     )
+        # else: return Stock.objects.all()
+        search_query = self.request.GET.get('search')
+        if search_query:
+            currents = Command.objects.all().order_by('status').filter(
+                Q(status__lt=2) &
+                (Q(product__name__icontains=search_query) | Q(provider__name__icontains=search_query))
+            )
+            received = Command.objects.all().order_by('status').filter(
+                Q(status=2) &
+                (Q(product__name__icontains=search_query) | Q(provider__name__icontains=search_query))
+            )
+            return (currents, received)
+        else:
+            currents = Command.objects.all().order_by('status').filter(status__lt=2)
+            received = Command.objects.all().order_by('status').filter(status=2)
+            return (currents, received)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = "Liste des commandes"
-        commands = self.get_queryset()
-        for command in commands:
-            command.status = command.get_status()
-        context['commands'] = commands
+        (currents, receiveds) = self.get_queryset()
+        for current in currents:
+            current.status = current.get_status() 
+        for received in receiveds:
+            received.status = received.get_status()
+
+        context['currents'] = currents
+        context['receiveds'] = receiveds
+        context['results'] = len(receiveds) + len(currents)
         return context
     
 class CommandDetail(DetailView):
@@ -250,16 +295,17 @@ class CommandDelete(DeleteView):
     template_name = 'command/delete.html'
     success_url = reverse_lazy('commands')
 
-
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, filters
 from .serializers import ProductSerializer, ProviderSerializer, StockSerializer, CommandSerializer, ProductItemSerializer
 
 class ProductViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows products to be viewed or edited.
     """
-    queryset = Product.objects.all().order_by('name')
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
 
 class ProviderViewSet(viewsets.ModelViewSet):
     """

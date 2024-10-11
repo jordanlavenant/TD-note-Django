@@ -10,9 +10,9 @@ PRODUCT_STATUS = (
 )
 
 COMMAND_STATUS = (
-    (0, 'En attente'),
-    (1, "En cours d'expédition"),
-    (2, 'Expédiée'),
+    (0, 'En préparation'),
+    (1, "Passée"),
+    (2, 'Reçue'),
     (3, 'Annulée')              
 )
 
@@ -49,6 +49,9 @@ class Provider(models.Model):
 
     def __str__(self):
         return "{0}".format(self.name)
+    
+    def get_stocks(self):
+        return Stock.objects.filter(provider=self)
 
 class ProductItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_items')
@@ -61,7 +64,7 @@ class ProductItem(models.Model):
 
     def __str__(self):
         return "{0} - {1}".format(self.product.name, self.provider.name)
-    
+
     def get_price_ttc(self):
         return self.product.price_ht * (1 + self.rate / 100)
 
@@ -76,6 +79,9 @@ class Stock(models.Model):
 
     def __str__(self):
         return "{0} {1}".format(self.product, self.provider)
+    
+    def get_price_ttc(self):
+        return self.product.price_ht * (1 + self.rate / 100)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

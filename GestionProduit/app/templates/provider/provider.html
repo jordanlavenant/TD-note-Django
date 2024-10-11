@@ -14,5 +14,29 @@
         <li class="list-group-item"><strong>Phone :</strong> {{ provider.phone }}</li>
         <li class="list-group-item"><strong>Email :</strong> {{ provider.email }}</li>
     </ul>
+    <h3 class="my-4">Produits fournis</h3>
+    {% if stocks %}
+    <div class="row">
+      {% for stock in stocks %}
+        <div 
+            class="col-md-4 mb-3"
+        >
+          <div class="card h-100">
+            <div class="card-body">
+              <h5 class="card-title">{{ stock.product.name }}</h5>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Quantité :</strong> {{ stock.quantity }} unités</li>
+                <li class="list-group-item"><strong>Prix HT :</strong> {{ stock.product.price_ht }} €</li>
+                <li class="list-group-item"><strong>Marge :</strong> {{ stock.rate }} %</li>
+                <li class="list-group-item"><strong>Prix TTC :</strong> {{ stock.price_ttc }} €</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-muted">Ce fournisseur ne fourni aucun produits</p>
+  {% endif %}
 </div>
 {% endblock %}
