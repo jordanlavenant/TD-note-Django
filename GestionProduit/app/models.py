@@ -110,7 +110,7 @@ class Command(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        if self.status == 2:  # Expédiée
+        if self.status == 2:
             stock, created = Stock.objects.get_or_create(
                 product=self.product,
                 provider=self.provider,
@@ -124,5 +124,4 @@ class Command(models.Model):
                 provider=self.provider,
                 defaults={'quantity': 0, 'rate': 0}
             )
-            # product_item.quantity += self.quantity
             product_item.save()
