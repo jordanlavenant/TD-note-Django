@@ -3,3 +3,4 @@ Django
 sqlparse
 django-bootstrap-v5
 djangorestframework
+django-filter
