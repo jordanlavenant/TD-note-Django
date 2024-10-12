@@ -52,12 +52,19 @@ class Provider(models.Model):
     
     def get_stocks(self):
         return Stock.objects.filter(provider=self)
+    
+class Attribute(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 class ProductItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_items')
     provider = models.ForeignKey(Provider, on_delete=models.CASCADE, related_name='product_items')
     quantity = models.IntegerField(default=0, verbose_name="Quantité")
     rate = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, verbose_name="Marge")
+    attributes = models.ManyToManyField('Attribute', blank=True)
 
     class Meta:
         unique_together = ('product', 'provider')
