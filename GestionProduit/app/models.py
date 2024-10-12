@@ -29,10 +29,10 @@ class Product(models.Model):
         verbose_name = "Product"
         verbose_name_plural = "Products"
 
-    name          = models.CharField(max_length=100)
-    price_ht      = models.DecimalField(max_digits=8, decimal_places=2,  null=True, blank=True, verbose_name="Prix unitaire HT")
-    status        = models.SmallIntegerField(choices=PRODUCT_STATUS, default=0)
-    date_creation = models.DateTimeField(blank=True, verbose_name="Date création", default=timezone.now()) 
+    name          = models.CharField(max_length=100, verbose_name="Nom")
+    price_ht      = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="Prix unitaire HT")
+    status        = models.SmallIntegerField(choices=PRODUCT_STATUS, default=0, verbose_name="Statut")
+    date_creation = models.DateTimeField(verbose_name="Date création", default=timezone.now()) 
 
     def __str__(self):
         return "{0}".format(self.name)
@@ -78,7 +78,7 @@ class ProductItem(models.Model):
 class Stock(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     provider = models.ForeignKey(Provider, on_delete=models.CASCADE)
-    rate = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True, verbose_name="Marge")
+    rate = models.DecimalField(max_digits=4, decimal_places=2, default=0.00, verbose_name="Marge")
     quantity = models.IntegerField(default=0, verbose_name="Quantité")
 
     class Meta:
