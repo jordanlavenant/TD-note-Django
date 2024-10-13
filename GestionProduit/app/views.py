@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from django.forms.models import BaseModelForm
 from django.urls import reverse_lazy
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 # def index(request):
@@ -49,7 +50,7 @@ class ProductDetail(DetailView):
     context_object_name = 'product'
 
     def get_object(self):
-        return Product.objects.get(pk=self.kwargs['pk'])
+        return get_object_or_404(Product, pk=self.kwargs['pk'])
 
     def get_context_data(self, **kwargs):
         context = super(ProductDetail, self).get_context_data(**kwargs)
