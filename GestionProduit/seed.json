@@ -1,0 +1,290 @@
+[
+    {
+        "model": "admin.logentry",
+        "pk": 1,
+        "fields": {
+            "action_time": "2024-10-14T22:13:18.652Z",
+            "user": 1,
+            "content_type": 13,
+            "object_id": "3",
+            "object_repr": "iPhone 16 Amazon",
+            "action_flag": 2,
+            "change_message": "[{\"changed\": {\"fields\": [\"Statut\"]}}]"
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 2,
+        "fields": {
+            "action_time": "2024-10-14T22:13:20.826Z",
+            "user": 1,
+            "content_type": 13,
+            "object_id": "2",
+            "object_repr": "iPhone 16 Ali Express",
+            "action_flag": 2,
+            "change_message": "[{\"changed\": {\"fields\": [\"Statut\"]}}]"
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 3,
+        "fields": {
+            "action_time": "2024-10-14T22:13:24.611Z",
+            "user": 1,
+            "content_type": 13,
+            "object_id": "1",
+            "object_repr": "iPhone 11 Amazon",
+            "action_flag": 2,
+            "change_message": "[{\"changed\": {\"fields\": [\"Statut\"]}}]"
+        }
+    },
+    {
+        "model": "admin.logentry",
+        "pk": 4,
+        "fields": {
+            "action_time": "2024-10-14T22:13:51.630Z",
+            "user": 1,
+            "content_type": 13,
+            "object_id": "5",
+            "object_repr": "Dell XPS 17 Ali Express",
+            "action_flag": 2,
+            "change_message": "[{\"changed\": {\"fields\": [\"Statut\"]}}]"
+        }
+    },
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "password": "pbkdf2_sha256$600000$BCrym3GM2Tk4cKZWdzo5DU$EGY/V7y6dDMnPa6zL/seRzETI2cKJ9866GA5ugYnxaA=",
+            "last_login": "2024-10-14T22:10:23.965Z",
+            "is_superuser": true,
+            "username": "admin",
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "is_staff": true,
+            "is_active": true,
+            "date_joined": "2024-10-14T22:09:44.151Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    },
+    {
+        "model": "sessions.session",
+        "pk": "yx560b3ghwrew44v3s9ql4f1csyssowr",
+        "fields": {
+            "session_data": ".eJxVjEEOwiAQRe_C2hCoBQaX7j0DGWBGqgaS0q6Md7dNutDtf-_9twi4LiWsneYwZXERWpx-t4jpSXUH-YH13mRqdZmnKHdFHrTLW8v0uh7u30HBXrZaWR6RM3k2hgFzBNCsXALwmtOZrAWD3jgc1GgUxUigNgSczcCOvPh8AfmyOC4:1t0TGh:hUcJwRh7g8R-K2OxXkKJgSVN327R2wVXef5CEQJgAGg",
+            "expire_date": "2024-10-28T22:10:23.975Z"
+        }
+    },
+    {
+        "model": "app.product",
+        "pk": 1,
+        "fields": {
+            "name": "iPhone 16",
+            "price_ht": "1700.00",
+            "status": 0,
+            "date_creation": "2024-10-14T22:08:16Z"
+        }
+    },
+    {
+        "model": "app.product",
+        "pk": 2,
+        "fields": {
+            "name": "iPhone 11",
+            "price_ht": "400.00",
+            "status": 0,
+            "date_creation": "2024-10-14T22:10:32Z"
+        }
+    },
+    {
+        "model": "app.product",
+        "pk": 3,
+        "fields": {
+            "name": "Dell XPS 17",
+            "price_ht": "1700.00",
+            "status": 0,
+            "date_creation": "2024-10-14T22:10:32Z"
+        }
+    },
+    {
+        "model": "app.provider",
+        "pk": 1,
+        "fields": {
+            "name": "Amazon",
+            "address": "11 rue de quelque chose",
+            "phone": "0777777",
+            "email": "irvyn@irvyn.fr"
+        }
+    },
+    {
+        "model": "app.provider",
+        "pk": 2,
+        "fields": {
+            "name": "Ali Express",
+            "address": "6 rue de quelque chose",
+            "phone": "06666666",
+            "email": "jordan@jordan.fr"
+        }
+    },
+    {
+        "model": "app.productitem",
+        "pk": 1,
+        "fields": {
+            "product": 1,
+            "provider": 1,
+            "quantity": 108,
+            "rate": "2.00",
+            "attributes": []
+        }
+    },
+    {
+        "model": "app.productitem",
+        "pk": 2,
+        "fields": {
+            "product": 2,
+            "provider": 2,
+            "quantity": 10,
+            "rate": "5.00",
+            "attributes": []
+        }
+    },
+    {
+        "model": "app.productitem",
+        "pk": 3,
+        "fields": {
+            "product": 1,
+            "provider": 2,
+            "quantity": 300,
+            "rate": "10.00",
+            "attributes": []
+        }
+    },
+    {
+        "model": "app.productitem",
+        "pk": 4,
+        "fields": {
+            "product": 3,
+            "provider": 1,
+            "quantity": 0,
+            "rate": "3.00",
+            "attributes": []
+        }
+    },
+    {
+        "model": "app.productitem",
+        "pk": 5,
+        "fields": {
+            "product": 2,
+            "provider": 1,
+            "quantity": 20,
+            "rate": "0.00",
+            "attributes": []
+        }
+    },
+    {
+        "model": "app.stock",
+        "pk": 1,
+        "fields": {
+            "product": 1,
+            "provider": 1,
+            "rate": "2.00",
+            "quantity": 108
+        }
+    },
+    {
+        "model": "app.stock",
+        "pk": 2,
+        "fields": {
+            "product": 2,
+            "provider": 2,
+            "rate": "5.00",
+            "quantity": 10
+        }
+    },
+    {
+        "model": "app.stock",
+        "pk": 3,
+        "fields": {
+            "product": 1,
+            "provider": 2,
+            "rate": "10.00",
+            "quantity": 300
+        }
+    },
+    {
+        "model": "app.stock",
+        "pk": 4,
+        "fields": {
+            "product": 3,
+            "provider": 1,
+            "rate": "3.00",
+            "quantity": 0
+        }
+    },
+    {
+        "model": "app.stock",
+        "pk": 5,
+        "fields": {
+            "product": 2,
+            "provider": 1,
+            "rate": "0.00",
+            "quantity": 20
+        }
+    },
+    {
+        "model": "app.command",
+        "pk": 1,
+        "fields": {
+            "product": 2,
+            "provider": 1,
+            "quantity": 20,
+            "date": "2024-10-14T22:10:32Z",
+            "status": 2
+        }
+    },
+    {
+        "model": "app.command",
+        "pk": 2,
+        "fields": {
+            "product": 1,
+            "provider": 2,
+            "quantity": 250,
+            "date": "2024-10-14T22:10:32Z",
+            "status": 2
+        }
+    },
+    {
+        "model": "app.command",
+        "pk": 3,
+        "fields": {
+            "product": 1,
+            "provider": 1,
+            "quantity": 100,
+            "date": "2024-10-14T22:10:32Z",
+            "status": 2
+        }
+    },
+    {
+        "model": "app.command",
+        "pk": 4,
+        "fields": {
+            "product": 3,
+            "provider": 1,
+            "quantity": 20,
+            "date": "2024-10-14T22:10:32.264Z",
+            "status": 0
+        }
+    },
+    {
+        "model": "app.command",
+        "pk": 5,
+        "fields": {
+            "product": 3,
+            "provider": 2,
+            "quantity": 75,
+            "date": "2024-10-14T22:10:32Z",
+            "status": 1
+        }
+    }
+]
