@@ -82,6 +82,7 @@ class ProductTestUrlRedirect(TestCase):
     def setUp(self):
         """Create a product"""
         self.product = Product.objects.create(
+            id='1',
             name="Écran LCD",
             price_ht=100,
             status=1,
@@ -89,16 +90,17 @@ class ProductTestUrlRedirect(TestCase):
         )
     
     def test_redirect_after_creation(self):
-        response = self.client.post(reverse('product-add'), self.product)
+        response = self.client.post(reverse('product-add'), self.product.__dict__)
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse('product', args=[self.product.id]))
-    
+        new_product = Product.objects.latest('id')
+        self.assertRedirects(response, reverse('product', args=[new_product.id]))
+
     def test_redirect_after_update(self):
-        response = self.client.post(reverse('product-update', args=[self.product.id]), self.product)
+        response = self.client.post(reverse('product-update', args=[self.product.id]), self.product.__dict__)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('product', args=[self.product.id]))
     
     def test_redirect_after_deletion(self):
-        response = self.client.post(reverse('product-delete', args=[self.product.id]), self.product)
+        response = self.client.post(reverse('product-delete', args=[self.product.id]), self.product.__dict__)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('products'))
