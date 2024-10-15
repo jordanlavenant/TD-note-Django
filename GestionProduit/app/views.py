@@ -8,10 +8,54 @@ from django.forms.models import BaseModelForm
 from django.urls import reverse_lazy
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.views import LoginView
+from django.contrib.auth import authenticate, login, logout
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
-# def index(request):
-#     return HttpResponse("Hello, world. You're at the polls index.")
+# Login
+class ConnectView(LoginView):
+    template_name = 'authentication/login.html'
+
+    def post(self, request, **kwargs):
+        username = request.POST.get('username', False)
+        password = request.POST.get('password', False)
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None and user.is_active:
+            login(request, user)
+            next_url = request.POST.get('next', request.GET.get('next', reverse_lazy('home')))
+            return redirect(next_url)
+        
+        return render(request, self.template_name, {'error': 'Invalid credentials'})
+
+    def get_context_data(self, **kwargs):
+        context = super(ConnectView, self).get_context_data(**kwargs)
+        context['title'] = "Connexion"
+        return context
+
+class DisconnectView(TemplateView):
+    template_name = 'authentication/logout.html'
+
+    def get(self, request, **kwargs):
+        logout(request)
+        return render(request, self.template_name, {'title': "Déconnexion"})
+
+# Home
+class HomeView(TemplateView):
+    template_name = 'home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(HomeView, self).get_context_data(**kwargs)
+        if (self.kwargs.get('param') == '' or self.kwargs.get('param') == None): 
+            context['titreh1'] = "Hello DJANGO"
+        else:
+            context['titreh1'] = f"Bonjour {self.kwargs.get('param')}"
+            return context
+
+    def post(self, request, **kwargs):
+        return render(request, self.template_name)
 
 # Product
 class Products(ListView):
@@ -70,6 +114,7 @@ class ProductCreate(CreateView):
         product = form.save()
         return redirect('product', product.id)
 
+@method_decorator(login_required, name='dispatch')
 class ProductUpdate(UpdateView):
     model = Product
     form_class = ProductForm
@@ -84,6 +129,7 @@ class ProductUpdate(UpdateView):
         context['title'] = "Modification du produit"
         return context
 
+@method_decorator(login_required, name='dispatch')
 class ProductDelete(DeleteView):
     model = Product
     template_name = 'product/delete.html'
@@ -123,6 +169,7 @@ class ProviderDetail(DetailView):
         context['stocks'] = stocks
         return context
 
+@method_decorator(login_required, name='dispatch')
 class ProviderCreate(CreateView):
     model = Provider
     form_class = ProviderForm
@@ -131,7 +178,8 @@ class ProviderCreate(CreateView):
     def form_valid(self, form: BaseModelForm):
         provider = form.save()
         return redirect('provider', provider.id)
-
+    
+@method_decorator(login_required, name='dispatch')
 class ProviderUpdate(UpdateView):
     model = Provider
     form_class = ProviderForm
@@ -146,6 +194,7 @@ class ProviderUpdate(UpdateView):
         context['title'] = "Modification du fournisseur"
         return context
 
+@method_decorator(login_required, name='dispatch')
 class ProviderDelete(DeleteView):
     model = Provider
     template_name = 'provider/delete.html'
@@ -185,6 +234,7 @@ class StockDetail(DetailView):
         context['title'] = "Détail du stock"
         return context
     
+@method_decorator(login_required, name='dispatch')
 class StockCreate(CreateView):
     model = Stock
     form_class = StockForm
@@ -194,6 +244,7 @@ class StockCreate(CreateView):
         stock = form.save()
         return redirect('stock', stock.id)
     
+@method_decorator(login_required, name='dispatch')
 class StockUpdate(UpdateView):
     model = Stock
     form_class = StockForm
@@ -208,6 +259,7 @@ class StockUpdate(UpdateView):
         context['title'] = "Modification du stock"
         return context
     
+@method_decorator(login_required, name='dispatch')
 class StockDelete(DeleteView):
     model = Stock
     template_name = 'stock/delete.html'
@@ -268,6 +320,7 @@ class CommandDetail(DetailView):
         context['status'] = self.get_object().get_status()
         return context
     
+@method_decorator(login_required, name='dispatch')
 class CommandCreate(CreateView):
     model = Command
     form_class = CommandForm
@@ -277,6 +330,7 @@ class CommandCreate(CreateView):
         command = form.save()
         return redirect('command', command.id)
     
+@method_decorator(login_required, name='dispatch')
 class CommandUpdate(UpdateView):
     model = Command
     form_class = CommandForm
@@ -290,7 +344,8 @@ class CommandUpdate(UpdateView):
         context = super(CommandUpdate, self).get_context_data(**kwargs)
         context['title'] = "Modification de la commande"
         return context
-    
+
+@method_decorator(login_required, name='dispatch')
 class CommandDelete(DeleteView):
     model = Command
     template_name = 'command/delete.html'
