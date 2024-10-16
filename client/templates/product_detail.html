@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products</title>
+    <title>Product Details</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Products</h1>
-    <form method="GET" action="{{ url_for('index') }}">
-        <input type="text" name="search" placeholder="Search products by name">
-        <button type="submit">Search</button>
-    </form>
+    <h1>Product Details</h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             <ul class="flashes">
@@ -21,14 +17,14 @@
             </ul>
         {% endif %}
     {% endwith %}
-    <ul>
-        {% for product in products %}
-            <li>
-                <a href="{{ url_for('product_detail', product_id=product.id) }}">
-                    {{ product.name }} - €{{ product.price_ht }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+    {% if product %}
+        <h2>{{ product.name }}</h2>
+        <p>Price: €{{ product.price_ht }}</p>
+        <p>Status: {{ get_status(product.status) }}</p>
+        <p>Date création: {{ product.date_creation }}</p>
+    {% else %}
+        <p>Product details not available.</p>
+    {% endif %}
+    <a href="{{ url_for('index') }}">Back to Products</a>
 </body>
 </html>
