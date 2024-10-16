@@ -1,7 +1,7 @@
 from django.test import TestCase, SimpleTestCase
 from django.urls import reverse, resolve
 from app.views import Product, Products, ProductCreate, ProductUpdate, ProductDelete
-from django.utils import timezone
+from django.contrib.auth.models import User
 
 class ProductUrlTest(SimpleTestCase):
 
@@ -42,7 +42,14 @@ class ProductUrlTest(SimpleTestCase):
 
 class ProductTestUrlResponses(TestCase):
 
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='admin',
+            password='admin'
+        )
+
     def create_test_view_status_code(self):
+        self.client.login(username='admin', password='admin')
         response = self.client.get(reverse('product-add'))
         self.assertEqual(response.status_code, 200)
 
@@ -53,12 +60,16 @@ class ProductTestUrlResponses(TestCase):
 class ProductTestUrlResponsesWithParameters(TestCase):
     
     def setUp(self):
-        """Create a product"""
+        """Create a product and a user"""
         self.product = Product.objects.create(
             name="Écran LCD",
             price_ht=100,
             status=1,
-            date_creation=timezone.make_aware(timezone.datetime(2021, 1, 1, 0, 0, 0))
+            stock=100
+        )
+        self.user = User.objects.create_user(
+            username='admin',
+            password='admin'
         )
     
     def test_detail_view_status_code(self):
@@ -70,37 +81,61 @@ class ProductTestUrlResponsesWithParameters(TestCase):
         self.assertEqual(response.status_code, 404)
     
     def test_update_view_status_code(self):
+        self.client.login(username='admin', password='admin')
         response = self.client.get(reverse('product-update', args=[self.product.id]))
         self.assertEqual(response.status_code, 200)
 
     def test_delete_view_status_code(self):
+        self.client.login(username='admin', password='admin')
         response = self.client.get(reverse('product-delete', args=[self.product.id]))
         self.assertEqual(response.status_code, 200)
     
 class ProductTestUrlRedirect(TestCase):
 
     def setUp(self):
-        """Create a product"""
+        """Create a product and a user"""
         self.product = Product.objects.create(
             id='1',
             name="Écran LCD",
             price_ht=100,
             status=1,
-            date_creation=timezone.make_aware(timezone.datetime(2021, 1, 1, 0, 0, 0))
+            stock=100
+        )
+        self.user = User.objects.create_user(
+            username='admin',
+            password='admin'
         )
     
     def test_redirect_after_creation(self):
+        self.client.login(username='admin', password='admin')
         response = self.client.post(reverse('product-add'), self.product.__dict__)
         self.assertEqual(response.status_code, 302)
         new_product = Product.objects.latest('id')
         self.assertRedirects(response, reverse('product', args=[new_product.id]))
 
     def test_redirect_after_update(self):
+        self.client.login(username='admin', password='admin')
         response = self.client.post(reverse('product-update', args=[self.product.id]), self.product.__dict__)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('product', args=[self.product.id]))
     
     def test_redirect_after_deletion(self):
+        self.client.login(username='admin', password='admin')
         response = self.client.post(reverse('product-delete', args=[self.product.id]), self.product.__dict__)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('products'))
+
+    def test_create_view_redirect_unauthenticated(self):
+        response = self.client.get(reverse('product-add'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/app/login/?next=/app/products/add/')
+
+    def test_update_view_redirect_unauthenticated(self):
+        response = self.client.get(reverse('product-update', args=[self.product.id]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, f'/app/login/?next=/app/products/{self.product.id}/update/')
+
+    def test_delete_view_redirect_unauthenticated(self):
+        response = self.client.get(reverse('product-delete', args=[self.product.id]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, f'/app/login/?next=/app/products/{self.product.id}/delete/')

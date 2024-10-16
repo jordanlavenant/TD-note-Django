@@ -1,7 +1,7 @@
 from django.test import TestCase, SimpleTestCase
 from django.urls import reverse, resolve
 from app.views import Provider, Providers, ProviderCreate, ProviderUpdate, ProviderDelete
-from django.utils import timezone
+from django.contrib.auth.models import User
 
 class ProviderUrlTest(SimpleTestCase):
 
@@ -42,7 +42,14 @@ class ProviderUrlTest(SimpleTestCase):
 
 class ProviderTestUrlResponses(TestCase):
 
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username='admin',
+            password='admin'
+        )
+
     def create_test_view_status_code(self):
+        self.client.login(username='admin', password='admin')
         response = self.client.get(reverse('provider-add'))
         self.assertEqual(response.status_code, 200)
 
@@ -53,12 +60,16 @@ class ProviderTestUrlResponses(TestCase):
 class ProviderTestUrlResponsesWithParameters(TestCase):
     
     def setUp(self):
-        """Create a provider"""
+        """Create a provider and a user"""
         self.provider = Provider.objects.create(
             name="Fournisseur A",
             address="123 Rue Exemple",
             phone="0123456789",
             email="fournisseur@example.com"
+        )
+        self.user = User.objects.create_user(
+            username='admin',
+            password='admin'
         )
     
     def test_detail_view_status_code(self):
@@ -70,17 +81,19 @@ class ProviderTestUrlResponsesWithParameters(TestCase):
         self.assertEqual(response.status_code, 404)
     
     def test_update_view_status_code(self):
+        self.client.login(username='admin', password='admin')
         response = self.client.get(reverse('provider-update', args=[self.provider.id]))
         self.assertEqual(response.status_code, 200)
 
     def test_delete_view_status_code(self):
+        self.client.login(username='admin', password='admin')
         response = self.client.get(reverse('provider-delete', args=[self.provider.id]))
         self.assertEqual(response.status_code, 200)
     
 class ProviderTestUrlRedirect(TestCase):
 
     def setUp(self):
-        """Create a provider"""
+        """Create a provider and a user"""
         self.provider = Provider.objects.create(
             id='1',
             name="Fournisseur A",
@@ -88,19 +101,41 @@ class ProviderTestUrlRedirect(TestCase):
             phone="0123456789",
             email="fournisseur@example.com"
         )
+        self.user = User.objects.create_user(
+            username='admin',
+            password='admin'
+        )
     
     def test_redirect_after_creation(self):
+        self.client.login(username='admin', password='admin')
         response = self.client.post(reverse('provider-add'), self.provider.__dict__)
         self.assertEqual(response.status_code, 302)
         new_provider = Provider.objects.latest('id')
         self.assertRedirects(response, reverse('provider', args=[new_provider.id]))
 
     def test_redirect_after_update(self):
+        self.client.login(username='admin', password='admin')
         response = self.client.post(reverse('provider-update', args=[self.provider.id]), self.provider.__dict__)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('provider', args=[self.provider.id]))
     
     def test_redirect_after_deletion(self):
+        self.client.login(username='admin', password='admin')
         response = self.client.post(reverse('provider-delete', args=[self.provider.id]), self.provider.__dict__)
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('providers'))
+
+    def test_create_view_redirect_unauthenticated(self):
+        response = self.client.get(reverse('provider-add'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/app/login/?next=/app/providers/add/')
+
+    def test_update_view_redirect_unauthenticated(self):
+        response = self.client.get(reverse('provider-update', args=[self.provider.id]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, f'/app/login/?next=/app/providers/{self.provider.id}/update/')
+
+    def test_delete_view_redirect_unauthenticated(self):
+        response = self.client.get(reverse('provider-delete', args=[self.provider.id]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, f'/app/login/?next=/app/providers/{self.provider.id}/delete/')
