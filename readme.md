@@ -189,6 +189,6 @@ cd GestionProduit
 
 Pour lancer le coverage, effectuez :
 ```
-coverage run --source='app' manage.py test
+coverage run --source=app manage.py test app/tests
 coverage report
 ```

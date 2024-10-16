@@ -10,27 +10,27 @@ class ProductFilter(admin.SimpleListFilter):
     title = 'filtre produit'
     parameter_name = 'custom_status'
 
-    def lookups(self, request, model_admin) :
+    def lookups(self) :
         return (
-        ('online', 'En ligne'),
-        ('offline', 'Hors ligne'),
+            ('online', 'En ligne'),
+            ('offline', 'Hors ligne'),
         )
     
-    def queryset(self, request, queryset):
+    def queryset(self, queryset):
         if self.value() == 'online':
             return queryset.filter(status=1)
         if self.value() == 'offline':
             return queryset.filter(status=0)
         
-def set_product_online(modeladmin, request, queryset):
+def set_product_online(queryset):
     queryset.update(status=1)
     set_product_online.short_description = "Mettre en ligne"
 
-def set_product_offline(modeladmin, request, queryset):
+def set_product_offline(queryset):
     queryset.update(status=0)
     set_product_offline.short_description = "Mettre hors ligne"
 
-def set_product_out_of_stock(modeladmin, request, queryset):
+def set_product_out_of_stock(queryset):
     queryset.update(status=2)
     set_product_offline.short_description = "Mettre en rupture de stock"
 
