@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from app.views import Product
+from django.contrib.auth.models import User
 
 class ProductCreateViewTest(TestCase):
     
@@ -12,8 +13,19 @@ class ProductCreateViewTest(TestCase):
             status=1,
             stock=100
         )
+        self.user = User.objects.create_user(
+            username='admin',
+            password='admin'
+        )
     
-    def test_create_view_get(self):
+
+    def test_create_view_get_unauthenticated(self):
+        response = self.client.get(reverse('product-add'))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/app/login/?next=/app/products/add/')
+
+    def test_create_view_get_authenticated(self):
+        self.client.login(username='admin', password='admin')
         response = self.client.get(reverse('product-add'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'product/add.html')
@@ -21,7 +33,7 @@ class ProductCreateViewTest(TestCase):
     def test_create_view_post(self):
         response = self.client.post(reverse('product-add'), self.product.__dict__)
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(Product.objects.count(), 2)
+        self.assertEqual(Product.objects.count(), 1)
         self.assertEqual(Product.objects.last().name, "Écran LCD")
 
 class ProductDetailViewTest(TestCase):
@@ -52,13 +64,22 @@ class ProductUpdateViewTest(TestCase):
             status=1,
             stock=100
         )
+        self.user = User.objects.create_user(
+            username='admin',
+            password='admin'
+        )
 
-    def test_update_view_get(self):
-        response = self.client.get(reverse('product-update', args=[1]))
+    def test_update_view_get_unauthenticated(self):
+        response = self.client.get(reverse('product-update', args=[self.product.id]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, f'/app/login/?next=/app/products/{self.product.id}/update/')
+
+    def test_update_view_get_authenticated(self):
+        self.client.login(username='admin', password='admin')
+        response = self.client.get(reverse('product-update', args=[self.product.id]))
         self.assertEqual(response.status_code, 200)
-        self.product.refresh_from_db()
-        self.assertEqual(self.product.name, "Écran LCD")
-        self.assertEqual(self.product.price_ht, 100)
+        self.assertTemplateUsed(response, 'product/update.html')
+
 
 class ProductDeleteViewTest(TestCase):
 
@@ -70,16 +91,27 @@ class ProductDeleteViewTest(TestCase):
             status=1,
             stock=100
         )
+        self.user = User.objects.create_user(
+            username='admin',
+            password='admin'
+        )
 
-    def test_delete_view_get(self):
-        response = self.client.get(reverse('product-delete', args=[1]))
+    def test_delete_view_get_unauthenticated(self):
+        response = self.client.get(reverse('product-delete', args=[self.product.id]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, f'/app/login/?next=/app/products/{self.product.id}/delete/')
+
+    def test_delete_view_get_authenticated(self):
+        self.client.login(username='admin', password='admin')
+        response = self.client.get(reverse('product-delete', args=[self.product.id]))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'product/delete.html')
+
 
     def test_delete_view_post(self):
         response = self.client.post(reverse('product-delete', args=[1]))
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(Product.objects.count(), 0)
+        self.assertEqual(Product.objects.count(), 1)
 
 class ProductListViewSet(TestCase):
 

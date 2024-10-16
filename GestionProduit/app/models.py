@@ -36,6 +36,9 @@ class Product(models.Model):
 
     def __str__(self):
         return "{0}".format(self.name)
+    
+    def get_status(self):
+        return PRODUCT_STATUS[self.status][1]
 
 class Provider(models.Model):
     class Meta:

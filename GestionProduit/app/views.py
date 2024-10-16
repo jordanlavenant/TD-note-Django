@@ -99,6 +99,7 @@ class ProductDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ProductDetail, self).get_context_data(**kwargs)
         context['title'] = "Détail du produit"
+        context['status'] = self.get_object().get_status()
         items = self.get_object().product_items.all()
         for item in items:
             item.price_ttc = item.get_price_ttc()
