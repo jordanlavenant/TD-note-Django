@@ -115,8 +115,6 @@ Les routes du modèle sont disponibles dans l'API, et sont accessibles en lectur
 - `GET /api/providers/<int:id>` : Récupère une catégorie par son id
 - `GET /api/stock/` : Récupère tous les stocks
 - `GET /api/stock/<int:id>` : Récupère un stock par son id
-- `GET /api/productitems/` : Récupère tous les produits classés par fournisseur
-- `GET /api/productitems/<int:id>` : Récupère un produit classé par son fournisseur
 - `GET /api/commands/` : Récupère toutes les commandes
 - `GET /api/commands/<int:id>` : Récupère une commande par son id
 

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Product, ProductItem, Provider, Stock, Command
+from .models import Product, Provider, Stock, Command
 from django.views.generic import *
 from django.http import HttpResponse
 from .forms import ProductForm, ProviderForm, StockForm, CommandForm
@@ -100,7 +100,7 @@ class ProductDetail(DetailView):
         context = super(ProductDetail, self).get_context_data(**kwargs)
         context['title'] = "Détail du produit"
         context['status'] = self.get_object().get_status()
-        items = self.get_object().product_items.all()
+        items = self.get_object().get_items()
         for item in items:
             item.price_ttc = item.get_price_ttc()
         context['items'] = items
@@ -354,7 +354,7 @@ class CommandDelete(DeleteView):
     success_url = reverse_lazy('commands')
 
 from rest_framework import permissions, viewsets, filters
-from .serializers import ProductSerializer, ProviderSerializer, StockSerializer, CommandSerializer, ProductItemSerializer
+from .serializers import ProductSerializer, ProviderSerializer, StockSerializer, CommandSerializer
 
 class ProductViewSet(viewsets.ModelViewSet):
     """
@@ -385,10 +385,3 @@ class CommandViewSet(viewsets.ModelViewSet):
     """
     queryset = Command.objects.all().order_by('date')
     serializer_class = CommandSerializer
-
-class ProductItemViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows product items to be viewed or edited.
-    """
-    queryset = ProductItem.objects.all().order_by('product')
-    serializer_class = ProductItemSerializer

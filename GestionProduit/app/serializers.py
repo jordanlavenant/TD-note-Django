@@ -1,5 +1,5 @@
 # from django.contrib.auth.models import Group, User
-from .models import Product, Stock, ProductItem, Provider, Command
+from .models import Product, Stock, Provider, Command
 from rest_framework import serializers
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -10,11 +10,6 @@ class ProductSerializer(serializers.ModelSerializer):
 class StockSerializer(serializers.ModelSerializer):
     class Meta:
         model = Stock
-        fields = '__all__'
-
-class ProductItemSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductItem
         fields = '__all__'
 
 class ProviderSerializer(serializers.ModelSerializer):
