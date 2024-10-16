@@ -1,15 +1,18 @@
-from flask import Flask, render_template, flash, request
+from flask import Flask, redirect, render_template, flash, request, session, url_for
 import requests
 
 app = Flask(__name__)
+app.secret_key = 'secret_key'
 
 BASE_URL = 'http://localhost:8000/api/'
 
-PRODUCT_STATUS = {
-    0: 'Hors ligne',
-    1: 'En ligne',
-    2: 'En rupture de stock'
-}
+def get_status(status_code):
+    PRODUCT_STATUS = {
+        0: 'Hors ligne',
+        1: 'En ligne',
+        2: 'En rupture de stock'
+    }
+    return PRODUCT_STATUS.get(status_code, 'Unknown status')
 
 def get_products(search_query=None):
     try:
@@ -30,7 +33,25 @@ def get_product(product_id):
         print(f"Error: {e}")
         return None
 
+@app.before_request
+def initialize_balance():
+    if 'balance' not in session:
+        session['balance'] = 100.0
+    
+@app.context_processor
+def inject_balance():
+    return {'balance': session.get('balance', 0.0)}
+
+@app.route('/add_balance', methods=['POST'])
+def add_balance():
+    session['balance'] = session.get('balance', 0.0) + 500.0
+    return redirect(request.referrer)
+
 @app.route('/')
+def home():
+    return redirect(url_for('index'))
+
+@app.route('/products')
 def index():
     search_query = request.args.get('search')
     products = get_products(search_query)
@@ -39,7 +60,7 @@ def index():
         products = []
     return render_template('index.html', products=products)
 
-@app.route('/product/<int:product_id>')
+@app.route('/products/<int:product_id>')
 def product_detail(product_id):
     product = get_product(product_id)
     if product is None:
@@ -47,8 +68,9 @@ def product_detail(product_id):
         return render_template('product_detail.html', product={})
     return render_template('product_detail.html', product=product, get_status=get_status)
 
-def get_status(status_code):
-    return PRODUCT_STATUS.get(status_code, 'Unknown status')
+@app.route('/order/<int:product_id>', methods=['POST'])
+def order(product_id):
+    return redirect(url_for('index'))
 
 if __name__ == '__main__':
     app.run(debug=True)

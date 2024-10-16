@@ -6,7 +6,13 @@
     <title>Product Details</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
-<body>
+<body class="center-content">
+    <div class="balance">
+        Balance: €{{ session['balance'] }}
+        <form method="POST" action="{{ url_for('add_balance') }}" style="display:inline;">
+            <button type="submit">Add €500</button>
+        </form>
+    </div>
     <h1>Product Details</h1>
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -22,9 +28,12 @@
         <p>Price: €{{ product.price_ht }}</p>
         <p>Status: {{ get_status(product.status) }}</p>
         <p>Date création: {{ product.date_creation }}</p>
+        <a href="{{ url_for('order', product_id=product.id) }}" class="btn">Commander</a>
     {% else %}
         <p>Product details not available.</p>
     {% endif %}
-    <a href="{{ url_for('index') }}">Back to Products</a>
 </body>
+<footer>
+    <a href="{{ url_for('index') }}">Back to Products</a>
+</footer>
 </html>

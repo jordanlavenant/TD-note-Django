@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <div class="balance">
+        Balance: €{{ session['balance'] }}
+    </div>
     <h1>Products</h1>
     <form method="GET" action="{{ url_for('index') }}">
         <input type="text" name="search" placeholder="Search products by name">
