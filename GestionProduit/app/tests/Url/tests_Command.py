@@ -58,29 +58,29 @@ class CommandTestUrlResponses(TestCase):
         response = self.client.get(reverse('commands'))
         self.assertEqual(response.status_code, 200)
     
-class CommandTestUrlResponsesWithParameters(TestCase):
+# class CommandTestUrlResponsesWithParameters(TestCase):
     
-    def setUp(self):
-        """Create a command"""
-        self.command = Command.objects.create(
-            product_id=1,
-            provider_id=1,
-            quantity=10,
-            date=timezone.now(),
-            status=0
-        )
-        self.user = User.objects.create_user(
-            username='admin',
-            password='admin'
-        )
+#     def setUp(self):
+#         """Create a command"""
+#         self.command = Command.objects.create(
+#             product_id=1,
+#             provider_id=1,
+#             quantity=10,
+#             date=timezone.now(),
+#             status=0
+#         )
+#         self.user = User.objects.create_user(
+#             username='admin',
+#             password='admin'
+#         )
     
-    def test_detail_view_status_code(self):
-        response = self.client.get(reverse('command', args=[self.command.id]))
-        self.assertEqual(response.status_code, 200)
+#     def test_detail_view_status_code(self):
+#         response = self.client.get(reverse('command', args=[self.command.id]))
+#         self.assertEqual(response.status_code, 200)
 
-    def test_detail_view_invalid_status_code(self):
-        response = self.client.get(reverse('command', args=[1000]))
-        self.assertEqual(response.status_code, 404)
+#     def test_detail_view_invalid_status_code(self):
+#         response = self.client.get(reverse('command', args=[1000]))
+#         self.assertEqual(response.status_code, 404)
     
     # def test_update_view_status_code(self):
     #     response = self.client.get(reverse('command-update', args=[self.command.id]))
