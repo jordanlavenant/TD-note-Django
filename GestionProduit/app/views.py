@@ -105,6 +105,7 @@ class ProductDetail(DetailView):
         context['items'] = items
         return context
 
+@method_decorator(login_required, name='dispatch')
 class ProductCreate(CreateView):
     model = Product
     form_class = ProductForm
