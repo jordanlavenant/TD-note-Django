@@ -11,7 +11,7 @@
         Balance: €{{ session['balance'] }}
     </div>
     <h1>Products</h1>
-    <form method="GET" action="{{ url_for('index') }}">
+    <form method="GET" action="{{ url_for('products') }}">
         <input type="text" name="search" placeholder="Search products by name">
         <button type="submit">Search</button>
     </form>
@@ -27,8 +27,8 @@
     <ul>
         {% for product in products %}
             <li>
-                <a href="{{ url_for('product_detail', product_id=product.id) }}">
-                    {{ product.name }} - €{{ product.price_ht }}
+                <a href="{{ url_for('product', product_id=product.id) }}">
+                    {{ product.name }}
                 </a>
             </li>
         {% endfor %}

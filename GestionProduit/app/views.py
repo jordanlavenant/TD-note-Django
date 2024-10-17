@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Product, Provider, Stock, Command
+from .models import Product, Provider, Stock, Command, Order, Cart  
 from django.views.generic import *
 from django.http import HttpResponse
 from .forms import ProductForm, ProviderForm, StockForm, CommandForm
@@ -12,6 +12,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth import authenticate, login, logout
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django_filters.rest_framework import DjangoFilterBackend
 # Create your views here.
 
 # Login
@@ -354,7 +355,7 @@ class CommandDelete(DeleteView):
     success_url = reverse_lazy('commands')
 
 from rest_framework import permissions, viewsets, filters
-from .serializers import ProductSerializer, ProviderSerializer, StockSerializer, CommandSerializer
+from .serializers import ProductSerializer, ProviderSerializer, StockSerializer, CommandSerializer, OrderSerializer, CartSerializer
 
 class ProductViewSet(viewsets.ModelViewSet):
     """
@@ -362,7 +363,8 @@ class ProductViewSet(viewsets.ModelViewSet):
     """
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['name']
     search_fields = ['name']
 
 class ProviderViewSet(viewsets.ModelViewSet):
@@ -378,6 +380,9 @@ class StockViewSet(viewsets.ModelViewSet):
     """
     queryset = Stock.objects.all().order_by('product')
     serializer_class = StockSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ['product', 'provider']
+    search_fields = ['product__name', 'provider__name']
 
 class CommandViewSet(viewsets.ModelViewSet):
     """
@@ -385,3 +390,19 @@ class CommandViewSet(viewsets.ModelViewSet):
     """
     queryset = Command.objects.all().order_by('date')
     serializer_class = CommandSerializer
+
+class OrderViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows orders to be viewed or edited.
+    """
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+class CartViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows carts to be viewed or edited.
+    """
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['user']

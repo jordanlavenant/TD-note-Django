@@ -28,7 +28,14 @@
         <p>Price: €{{ product.price_ht }}</p>
         <p>Status: {{ get_status(product.status) }}</p>
         <p>Date création: {{ product.date_creation }}</p>
-        <a href="{{ url_for('order', product_id=product.id) }}" class="btn">Commander</a>
+        {% for stock in stocks %}
+            <div>
+                <p>Stock: {{ stock.quantity }}</p>
+                <p>Fournisseur: {{ get_provider(stock.provider).name }}</p>
+                <a href="{{ url_for('order', product_id=product.id, provider_id=stock.provider) }}">Ajouter au panier</a>
+            </div>
+        {% endfor %}
+ 
     {% else %}
         <p>Product details not available.</p>
     {% endif %}

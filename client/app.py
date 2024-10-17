@@ -1,4 +1,5 @@
 from flask import Flask, redirect, render_template, flash, request, session, url_for
+from client import get_products, get_product, get_stock, get_provider, add_order
 import requests
 
 app = Flask(__name__)
@@ -13,25 +14,6 @@ def get_status(status_code):
         2: 'En rupture de stock'
     }
     return PRODUCT_STATUS.get(status_code, 'Unknown status')
-
-def get_products(search_query=None):
-    try:
-        params = {'search': search_query} if search_query else {}
-        response = requests.get(f'{BASE_URL}products/', params=params)
-        response.raise_for_status()  # Lève une exception pour les codes d'erreur HTTP
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        print(f"Error: {e}")
-        return None
-
-def get_product(product_id):
-    try:
-        response = requests.get(f'{BASE_URL}products/{product_id}/')
-        response.raise_for_status()
-        return response.json()
-    except requests.exceptions.RequestException as e:
-        print(f"Error: {e}")
-        return None
 
 @app.before_request
 def initialize_balance():
@@ -48,29 +30,42 @@ def add_balance():
     return redirect(request.referrer)
 
 @app.route('/')
-def home():
-    return redirect(url_for('index'))
+def index():
+    return redirect(url_for('products'))
 
 @app.route('/products')
-def index():
+def products():
     search_query = request.args.get('search')
     products = get_products(search_query)
     if products is None:
         flash('Failed to connect to the API. Please try again later.', 'error')
         products = []
-    return render_template('index.html', products=products)
+    return render_template('products.html', products=products)
 
 @app.route('/products/<int:product_id>')
-def product_detail(product_id):
+def product(product_id):
     product = get_product(product_id)
     if product is None:
         flash('Failed to retrieve product details. Please try again later.', 'error')
-        return render_template('product_detail.html', product={})
-    return render_template('product_detail.html', product=product, get_status=get_status)
+        return render_template('product.html', product={})
+    stocks = get_stock(product_id)
+    return render_template(
+        'product.html', 
+        product=product, 
+        get_status=get_status,
+        get_provider=get_provider,
+        stocks=stocks
+    )
 
-@app.route('/order/<int:product_id>', methods=['POST'])
-def order(product_id):
-    return redirect(url_for('index'))
+@app.route('/order/<int:product_id>/<int:provider_id>/')
+def order(product_id, provider_id):
+    default_user = 1
+    try:
+        add_order(product_id, provider_id, 1, default_user)
+        flash('Order placed successfully!', 'success')
+    except requests.exceptions.RequestException:
+        flash('Failed to place order. Please try again later.', 'error')
+    return redirect(url_for('products'))
 
 if __name__ == '__main__':
     app.run(debug=True)
