@@ -16,6 +16,12 @@ COMMAND_STATUS = (
     (3, 'Annulée')              
 )
 
+CART_STATUS = (
+    (0, 'Non commandé'),
+    (1, 'Commandé'),
+    (2, 'Annulé')
+)
+
 class Status(models.Model):
     numero  = models.IntegerField()
     libelle = models.CharField(max_length=100)
@@ -104,3 +110,61 @@ class Command(models.Model):
             )
             stock.quantity += self.quantity
             stock.save()
+
+class User(models.Model):
+    name = models.CharField(max_length=100, blank=True)
+    email = models.EmailField(max_length=100, unique=True)
+    password = models.CharField(max_length=100)
+    phone = models.CharField(max_length=100, blank=True)
+    address = models.CharField(max_length=100, blank=True)
+
+    def __str__(self):
+        return "{0}".format(self.name)
+
+class Order(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Produit")
+    provider = models.ForeignKey(Provider, on_delete=models.CASCADE, verbose_name="Fournisseur")
+    quantity = models.IntegerField(verbose_name="Quantité")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Utilisateur")
+
+    def __str__(self):
+        return "{0}".format(self.product)
+    
+    def get_price_ttc(self):
+        stock = Stock.objects.get(product=self.product, provider=self.provider)
+        return self.quantity * stock.get_price_ttc() if stock else 0.00
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cart, created = Cart.objects.get_or_create(user=self.user)
+        cart.orders.add(self)
+        cart.save()
+
+class Cart(models.Model):
+    orders = models.ManyToManyField(Order, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
+    status = models.SmallIntegerField(choices=CART_STATUS, default=0, verbose_name="Statut du panier")
+
+    def __str__(self):
+        return "Panier"
+    
+    def get_total(self):
+        total = 0
+        for order in self.orders.all():
+            total += order.get_price_ttc()
+        return total
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.status == 1:
+            for order in self.orders.all():
+                stock = Stock.objects.get(product=order.product, provider=order.provider)
+                stock.quantity -= order.quantity
+                stock.save()
+        elif self.status == 2:
+            for order in self.orders.all():
+                stock = Stock.objects.get(product=order.product, provider=order.provider)
+                stock.quantity += order.quantity
+                stock.save()
+        super().save(*args, **kwargs)
+        
