@@ -3,8 +3,12 @@ from . import views
 from django.views.generic import *
 
 urlpatterns = [
-    # path('', views.index, name='index'),
+    # Index
+    path('', views.HomeView.as_view(), name='home'),
 
+    # Authentication
+    path('login/', views.ConnectView.as_view(), name='login'),
+    path('logout/', views.DisconnectView.as_view(), name='logout'),
 
     # Product
     path("products", views.Products.as_view(), name='products'),

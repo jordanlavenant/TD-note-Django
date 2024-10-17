@@ -2,7 +2,7 @@
 {% load static %}
 <html lang="fr">
   <head>
-    <meta charset="utf -8" />
+    <meta charset="utf-8" />
     <title>{% block title %}{% endblock %}</title>
     {% block styles %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
@@ -13,48 +13,49 @@
     {% endblock %}
   </head>
   <body class="d-flex flex-column min-vh-100">
-    <nav class="bg-dark">
-      <ul class="nav text-white container">
+    <nav class="bg-dark d-flex justify-content-between">
+      <ul class="nav text-white">
         <li class="nav-item bg-primary">
-          <a
-            class="text-white btn btn-dark rounded-0 px-5"
-            href="{% url 'products' %}"
-          >
+          <a class="text-white btn btn-dark rounded-0 px-5" href="{% url 'products' %}">
             Produits
           </a>
         </li>
         <li class="nav-item bg-primary">
-          <a
-            class="text-white btn btn-dark rounded-0 px-5"
-            href="{% url 'providers' %}"
-          >
+          <a class="text-white btn btn-dark rounded-0 px-5" href="{% url 'providers' %}">
             Fournisseurs
           </a>
         </li>
         <li class="nav-item bg-primary">
-          <a
-            class="text-white btn btn-dark rounded-0 px-5"
-            href="{% url 'stocks' %}"
-          >
+          <a class="text-white btn btn-dark rounded-0 px-5" href="{% url 'stocks' %}">
             Stocks
           </a>
         </li>
         <li class="nav-item bg-primary">
-          <a
-            class="text-white btn btn-dark rounded-0 px-5"
-            href="{% url 'commands' %}"
-          >
+          <a class="text-white btn btn-dark rounded-0 px-5" href="{% url 'commands' %}">
             Commandes
           </a>
         </li>
       </ul>
+      {% if user.is_authenticated %}
+      <li class="nav-item bg-primary ml-auto">
+        <a class="text-danger btn btn-dark rounded-0 px-5" href="{% url 'logout' %}">
+          Déconnexion
+        </a>
+      </li>
+      {% else %}
+      <li class="nav-item bg-primary ml-auto">
+        <a class="text-primary btn btn-dark rounded-0 px-5" href="{% url 'login' %}">
+          Connexion
+        </a>
+      </li>
+      {% endif %}
     </nav>
     <main role="main" class="bg-primary flex-grow-1 py-4">
       <div class="text-white">{% block content %} {% endblock %}</div>
     </main>
     <footer class="footer bg-dark text-white">
       <div class="container">
-        <p>&copy; Copyright {% now "M Y" %} by LAVENANT, COURSIMAULT (c)</p>
+        <p>&copy; Copyright {% now "Y" %} by LAVENANT, COURSIMAULT (c)</p>
       </div>
     </footer>
   </body>

@@ -1,36 +1,33 @@
 from decimal import Decimal
 from django.contrib import admin
-from .models import Product, ProductItem, Provider, Stock, Command, Status
-
-class ProductItemAdmin(admin.TabularInline):
-    model = ProductItem
-    filter_vertical = ('attributes',)
+from .models import Product, Provider, Stock, Command, Status
 
 class ProductFilter(admin.SimpleListFilter):
     title = 'filtre produit'
     parameter_name = 'custom_status'
+    filter_vertical = ('attributes',)
 
-    def lookups(self, request, model_admin) :
+    def lookups(self) :
         return (
-        ('online', 'En ligne'),
-        ('offline', 'Hors ligne'),
+            ('online', 'En ligne'),
+            ('offline', 'Hors ligne'),
         )
     
-    def queryset(self, request, queryset):
+    def queryset(self, queryset):
         if self.value() == 'online':
             return queryset.filter(status=1)
         if self.value() == 'offline':
             return queryset.filter(status=0)
         
-def set_product_online(modeladmin, request, queryset):
+def set_product_online(queryset):
     queryset.update(status=1)
     set_product_online.short_description = "Mettre en ligne"
 
-def set_product_offline(modeladmin, request, queryset):
+def set_product_offline(queryset):
     queryset.update(status=0)
     set_product_offline.short_description = "Mettre hors ligne"
 
-def set_product_out_of_stock(modeladmin, request, queryset):
+def set_product_out_of_stock(queryset):
     queryset.update(status=2)
     set_product_offline.short_description = "Mettre en rupture de stock"
 
@@ -41,7 +38,7 @@ class StatusAdmin(admin.ModelAdmin):
 class ProductAdmin(admin.ModelAdmin):
     model = Product
     list_filter = (ProductFilter,)
-    inlines = [ProductItemAdmin,]
+    inlines = []
     date_hierarchy = 'date_creation'
     actions = [set_product_online, set_product_offline, set_product_out_of_stock]
     search_fields = ('name',)
@@ -78,6 +75,3 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(Provider, ProviderAdmin)
 admin.site.register(Stock, StockAdmin)
 admin.site.register(Command, CommandAdmin)
-
-# Register your models here.
-admin.site.register(ProductItem)
