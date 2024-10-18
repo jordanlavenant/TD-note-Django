@@ -4,34 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='products.css') }}">
 </head>
 <body>
-    <div class="balance">
-        Balance: €{{ session['balance'] }}
-    </div>
-    <h1>Products</h1>
-    <form method="GET" action="{{ url_for('products') }}">
-        <input type="text" name="search" placeholder="Search products by name">
-        <button type="submit">Search</button>
-    </form>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul class="flashes">
-                {% for category, message in messages %}
-                    <li class="{{ category }}">{{ message }}</li>
+    <header>
+        <div class="balance">
+            Balance: €{{ session['balance'] }}
+        </div>
+        <h1>Products</h1>
+    </header>
+    <main>
+        <form method="GET" action="{{ url_for('products') }}">
+            <input type="text" name="search" placeholder="Search products by name">
+            <button type="submit">Search</button>
+        </form>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        <section class="product-list">
+            <ul>
+                {% for product in products %}
+                    <li>
+                        <a href="{{ url_for('product', product_id=product.id) }}">
+                            {{ product.name }}
+                        </a>
+                    </li>
                 {% endfor %}
             </ul>
-        {% endif %}
-    {% endwith %}
-    <ul>
-        {% for product in products %}
-            <li>
-                <a href="{{ url_for('product', product_id=product.id) }}">
-                    {{ product.name }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+        </section>
+    </main>
+    <footer>
+        <a class="btn" href="{{ url_for('index') }}">Back to Home</a>
+    </footer>
 </body>
 </html>

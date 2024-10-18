@@ -4,43 +4,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='product.css') }}">
 </head>
-<body class="center-content">
-    <div class="balance">
-        Balance: €{{ session['balance'] }}
-        <form method="POST" action="{{ url_for('add_balance') }}" style="display:inline;">
-            <button type="submit">Add €500</button>
-        </form>
-    </div>
-    <h1>Product Details</h1>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <ul class="flashes">
-                {% for category, message in messages %}
-                    <li class="{{ category }}">{{ message }}</li>
+<body>
+    <header>
+        <h1>Product Details</h1>
+    </header>
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="{{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        {% if product %}
+            <section class="product-details">
+                <h2>{{ product.name }}</h2>
+            </section>
+            <section class="product-stocks">
+                {% for stock in stocks %}
+                    <div class="stock-item">
+                        <strong>{{ get_provider(stock.provider).name }}</strong>
+                        <p>Stock restant : <strong>{{ stock.quantity }}</strong></p>
+                        <p>Prix TTC : <strong>{{'%0.2f'|format(product.price_ht|int * (1 + stock.rate|int / 100)) }} €</strong></p>
+                        <a class="btn" href="{{ url_for('order', product_id=product.id, provider_id=stock.provider) }}">Ajouter au panier</a>
+                    </div>
                 {% endfor %}
-            </ul>
+            </section>
+        {% else %}
+            <p>Product details not available.</p>
         {% endif %}
-    {% endwith %}
-    {% if product %}
-        <h2>{{ product.name }}</h2>
-        <p>Price: €{{ product.price_ht }}</p>
-        <p>Status: {{ get_status(product.status) }}</p>
-        <p>Date création: {{ product.date_creation }}</p>
-        {% for stock in stocks %}
-            <div>
-                <p>Stock: {{ stock.quantity }}</p>
-                <p>Fournisseur: {{ get_provider(stock.provider).name }}</p>
-                <a href="{{ url_for('order', product_id=product.id, provider_id=stock.provider) }}">Ajouter au panier</a>
-            </div>
-        {% endfor %}
- 
-    {% else %}
-        <p>Product details not available.</p>
-    {% endif %}
+    </main>
+    <footer>
+        <a class="btn" href="{{ url_for('index') }}">Back to Products</a>
+    </footer>
 </body>
-<footer>
-    <a href="{{ url_for('index') }}">Back to Products</a>
-</footer>
 </html>
