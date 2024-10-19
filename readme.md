@@ -1,3 +1,4 @@
+## __[Vidéo explicative ici](https://www.youtube.com/watch?v=Y5iCRvl6uS4)__
 # TP-Noté Django
 
 _COURSIMAULT Irvyn - LAVENANT Jordan_
