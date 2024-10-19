@@ -1,9 +1,71 @@
 {% extends 'base.html' %} {% block content %}
-<div class="container">
-  <h1>Gestion de produits / fournisseurs / commandes / stocks</h1>
-    <p>
-        Bienvenue sur l'application de gestion de produits. Vous pouvez gérer les
-        produits, les fournisseurs, les commandes et les stocks.
-    </p>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="text-center">
+        Bienvenue sur votre espace de gestion de produits
+      </h1>
+    </div>
+  </div>
+  <div class="container mt-5">
+    <div class="row">
+      <!-- Carte pour les Produits -->
+      <div class="col-md-3">
+        <a href="{% url 'products' %}" class="card-link text-decoration-none">
+          <div class="card text-center" style="height: 200px">
+            <div class="card-body d-flex flex-column justify-content-center">
+              <h5 class="card-title">
+                <strong class="text-danger">{{ products }}</strong>
+                Produits
+              </h5>
+              <p class="card-text">Gérer vos produits</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <!-- Carte pour les Fournisseurs -->
+      <div class="col-md-3">
+        <a href="{% url 'providers' %}" class="card-link text-decoration-none">
+          <div class="card text-center" style="height: 200px">
+            <div class="card-body d-flex flex-column justify-content-center">
+              <h5 class="card-title">
+                <strong class="text-danger">{{ providers }}</strong>
+                Fournisseurs
+              </h5>
+              <p class="card-text">Gérer vos fournisseurs</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <!-- Carte pour les Stocks -->
+      <div class="col-md-3">
+        <a href="{% url 'stocks' %}" class="card-link text-decoration-none">
+          <div class="card text-center" style="height: 200px">
+            <div class="card-body d-flex flex-column justify-content-center">
+              <h5 class="card-title">
+                <strong class="text-danger">{{ stocks }}</strong>
+                Stocks
+              </h5>
+              <p class="card-text">Gérer vos stocks</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <!-- Carte pour les Commandes -->
+      <div class="col-md-3">
+        <a href="{% url 'commands' %}" class="card-link text-decoration-none">
+          <div class="card text-center" style="height: 200px">
+            <div class="card-body d-flex flex-column justify-content-center">
+              <h5 class="card-title">
+                <strong class="text-danger">{{ commands }}</strong>
+                Commandes
+              </h5>
+              <p class="card-text">Gérer vos commandes</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

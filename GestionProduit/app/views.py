@@ -47,13 +47,26 @@ class DisconnectView(TemplateView):
 class HomeView(TemplateView):
     template_name = 'home.html'
 
+    def get_products(self):
+        return Product.objects.all()
+
+    def get_providers(self):
+        return Provider.objects.all()
+
+    def get_stocks(self):
+        return Stock.objects.all()
+
+    def get_commands(self):
+        return Command.objects.all()
+
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
-        if (self.kwargs.get('param') == '' or self.kwargs.get('param') == None): 
-            context['titreh1'] = "Hello DJANGO"
-        else:
-            context['titreh1'] = f"Bonjour {self.kwargs.get('param')}"
-            return context
+        context['title'] = "Accueil"
+        context['products'] = len(self.get_products())
+        context['providers'] = len(self.get_providers())
+        context['stocks'] = len(self.get_stocks())
+        context['commands'] = len(self.get_commands())
+        return context
 
     def post(self, request, **kwargs):
         return render(request, self.template_name)
