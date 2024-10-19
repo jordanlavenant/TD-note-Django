@@ -222,3 +222,9 @@ Pour lancer le coverage, effectuez :
 coverage run --source=app manage.py test app/tests
 coverage report
 ```
+
+## MCD
+
+MCD généré par l'outil [Graphziz](https://graphviz.org/), disponible dans le fichier `mcd.png`.
+
+![MCD](mcd.png "MCD")
