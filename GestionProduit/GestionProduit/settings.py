@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'rest_framework',
     'django_filters',
+    'django_extensions',
     'app',
 ]
 
@@ -145,4 +146,9 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
     ],
+}
+
+GRAPH_MODELS ={
+    'all_applications': True,
+    'graph_models': True,
 }

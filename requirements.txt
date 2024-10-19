@@ -7,3 +7,7 @@ django-filter
 coverage
 requests
 flask
+graphviz
+django-extensions
+pyparsing
+pydot
